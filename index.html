@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>شات mido | دردشة عربية للتعارف</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f1ea;--panel:#fffdf9;--ink:#2a2118;--mute:#7a6c5d;--line:#e6dccf;--brand:#c2562b;--brand2:#8f3a18;--mine:#fbe3d4;--other:#f0ebe3;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#18130f;--panel:#221b15;--ink:#f3ebe0;--mute:#a89a8a;--line:#3a2f26;--brand:#e0763f;--brand2:#f0a173;--mine:#4a2a1b;--other:#2d251d;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#18130f;--panel:#221b15;--ink:#f3ebe0;--mute:#a89a8a;--line:#3a2f26;--brand:#e0763f;--brand2:#f0a173;--mine:#4a2a1b;--other:#2d251d;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%}
+body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:"Cairo",Tahoma,Arial,sans-serif;font-size:16px}
+button,input{font:inherit;color:inherit}
+.hidden{display:none!important}
+#login{height:100%;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:32px 28px;width:100%;max-width:400px;text-align:center}
+.logo{width:64px;height:64px;margin:0 auto 12px;border-radius:20px;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700}
+h1{margin:0 0 4px;font-size:26px}
+.sub{color:var(--mute);margin:0 0 22px;font-size:14px}
+input[type=text]{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);outline:none}
+input[type=text]:focus{border-color:var(--brand)}
+.btn{width:100%;margin-top:12px;padding:13px;border:0;border-radius:12px;background:var(--brand);color:#fff;font-weight:700;cursor:pointer}
+.btn:hover{background:var(--brand2)}
+.note{font-size:12px;color:var(--mute);margin-top:16px;line-height:1.7}
+#app{height:100%;display:flex}
+aside{width:230px;background:var(--panel);border-inline-end:1px solid var(--line);display:flex;flex-direction:column;padding:16px 12px}
+aside .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;margin-bottom:18px}
+aside .brand .logo{width:38px;height:38px;margin:0;font-size:20px;border-radius:12px}
+.rooms{flex:1;overflow:auto}
+.room{display:block;width:100%;text-align:start;padding:10px 12px;margin-bottom:4px;border:0;background:none;border-radius:10px;cursor:pointer}
+.room:hover{background:var(--other)}
+.room.on{background:var(--brand);color:#fff;font-weight:600}
+.me{display:flex;align-items:center;gap:10px;padding-top:12px;border-top:1px solid var(--line);font-size:14px}
+.me button{margin-inline-start:auto;border:0;background:none;color:var(--mute);cursor:pointer;font-size:13px}
+main{flex:1;display:flex;flex-direction:column;min-width:0}
+header{display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--panel);border-bottom:1px solid var(--line)}
+header h2{margin:0;font-size:18px}
+header small{color:var(--mute)}
+#menu,#theme{border:1px solid var(--line);background:none;border-radius:10px;padding:6px 10px;cursor:pointer}
+#menu{display:none}
+#theme{margin-inline-start:auto}
+#msgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:10px}
+.empty{margin:auto;color:var(--mute);text-align:center}
+.m{display:flex;gap:10px;max-width:min(560px,88%);align-items:flex-end}
+.m.mine{align-self:flex-start;flex-direction:row-reverse}
+.av{flex:none;width:34px;height:34px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.bub{background:var(--other);padding:8px 13px;border-radius:16px;min-width:0}
+.mine .bub{background:var(--mine)}
+.nm{font-size:12px;font-weight:700;color:var(--brand2)}
+.tx{overflow-wrap:anywhere;line-height:1.7}
+.tm{font-size:11px;color:var(--mute)}
+form{display:flex;gap:8px;padding:12px 14px;background:var(--panel);border-top:1px solid var(--line)}
+form input{flex:1}
+form .send{width:auto;margin:0;padding:0 22px}
+@media (max-width:720px){
+aside{position:fixed;inset:0 0 0 auto;z-index:20;width:240px;transform:translateX(100%);transition:transform .2s;box-shadow:-8px 0 30px rgba(0,0,0,.2)}
+aside.open{transform:none}
+#menu{display:block}
+}
+</style>
+</head>
+<body>
+<section id="login">
+  <div class="card">
+    <div class="logo">M</div>
+    <h1>شات mido</h1>
+    <p class="sub">دردشة عربية للتعارف، ادخل كزائر من غير تسجيل</p>
+    <input type="text" id="nick" maxlength="16" placeholder="اكتب اسمك المستعار" autocomplete="off">
+    <button class="btn" id="enter">دخول الزوار</button>
+    <p class="note">ممنوع الإساءة والألفاظ الخارجة. ما تشاركش بياناتك الشخصية مع حد، ومتدخلش على روابط من غرباء.</p>
+  </div>
+</section>
+<div id="app" class="hidden">
+  <aside id="side">
+    <div class="brand"><div class="logo">M</div>mido</div>
+    <div class="rooms" id="rooms"></div>
+    <div class="me"><div class="av" id="meav"></div><span id="mename"></span><button id="out">خروج</button></div>
+  </aside>
+  <main>
+    <header>
+      <button id="menu" aria-label="الغرف">☰</button>
+      <div><h2 id="rtitle"></h2><small id="status"></small></div>
+      <button id="theme" aria-label="تبديل الوضع">◐</button>
+    </header>
+    <div id="msgs"></div>
+    <form id="f" autocomplete="off">
+      <input type="text" id="inp" maxlength="300" placeholder="اكتب رسالتك هنا…">
+      <button class="btn send" type="submit">إرسال</button>
+    </form>
+  </main>
+</div>
+<script>
+(function(){
+var COLORS=["#c2562b","#2f7d6d","#5a62b8","#b0486e","#8a6d1f","#3d7ab5","#7a4fa0"];
+var $=function(i){return document.getElementById(i)};
+var nick="",room="general",rooms=[],keys={},list=[],timer=null,gen=0,lastKey="";
+
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+function color(s){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return COLORS[Math.abs(h)%COLORS.length]}
+function av(el,n){el.textContent=n.charAt(0);el.style.background=color(n)}
+function fmt(t){return new Date(t).toLocaleTimeString("ar-EG",{hour:"2-digit",minute:"2-digit"})}
+
+var th=store("theme");if(th)document.documentElement.setAttribute("data-theme",th);
+$("theme").onclick=function(){
+  var c=document.documentElement.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");
+  var n=c==="dark"?"light":"dark";document.documentElement.setAttribute("data-theme",n);store("theme",n)};
+
+function buildRooms(){
+  var box=$("rooms");box.textContent="";
+  rooms.forEach(function(r){
+    var b=document.createElement("button");b.className="room"+(r.id===room?" on":"");
+    b.textContent=(r.private?"🔒 ":"💬 ")+r.name;
+    b.onclick=function(){$("side").classList.remove("open");openRoom(r.id)};
+    box.appendChild(b);
+    if(r.id===room)$("rtitle").textContent=r.name});
+}
+function render(){
+  var box=$("msgs");box.textContent="";
+  if(!list.length){var e=document.createElement("div");e.className="empty";e.textContent="مفيش رسايل لسه. ابدأ الكلام وسلّم على الجماعة 👋";box.appendChild(e);return}
+  list.forEach(function(m){
+    var w=document.createElement("div");w.className="m"+(m.nick===nick?" mine":"");
+    var a=document.createElement("div");a.className="av";av(a,m.nick);
+    var b=document.createElement("div");b.className="bub";
+    var n=document.createElement("div");n.className="nm";n.textContent=m.nick;
+    var t=document.createElement("div");t.className="tx";t.textContent=m.text;
+    var tm=document.createElement("div");tm.className="tm";tm.textContent=fmt(m.ts);
+    b.appendChild(n);b.appendChild(t);b.appendChild(tm);w.appendChild(a);w.appendChild(b);box.appendChild(w)});
+  box.scrollTop=box.scrollHeight;
+}
+function qs(){return "room="+encodeURIComponent(room)+"&key="+encodeURIComponent(keys[room]||"")}
+
+function openRoom(id){
+  clearTimeout(timer);gen++;
+  var r=rooms.filter(function(x){return x.id===id})[0];
+  if(r&&r.private&&!keys[id]){
+    var k=prompt("كلمة سر الغرفة الخاصة");
+    if(!k){if(id!=="general")return openRoom("general");return}
+    keys[id]=k}
+  room=id;buildRooms();$("status").textContent="جارٍ الاتصال…";
+  lastKey="";list=[];load();
+}
+function load(){
+  var g=gen;
+  clearTimeout(timer);
+  fetch("/api/history?"+qs(),{cache:"no-store"}).then(function(r){
+    if(g!==gen)throw 0;
+    if(r.status===403){delete keys[room];alert("كلمة السر غلط أو الغرفة مقفولة");openRoom("general");throw 0}
+    if(!r.ok)throw 1;
+    return r.json()}).then(function(l){
+    if(g!==gen)return;
+    var k=l.length?l[l.length-1].ts+":"+l.length:"0";
+    if(k!==lastKey){lastKey=k;list=l;render()}
+    $("status").textContent="متصل · بيتحدّث تلقائيًا";
+    timer=setTimeout(load,3000);
+  }).catch(function(e){if(g===gen&&e!==0){$("status").textContent="انقطع الاتصال، بحاول أرجّع…";timer=setTimeout(load,5000)}});
+}
+
+var lastSend=0;
+$("f").onsubmit=function(ev){
+  ev.preventDefault();
+  var v=$("inp").value.trim(),now=Date.now();
+  if(!v||now-lastSend<800)return;lastSend=now;$("inp").value="";
+  fetch("/api/send",{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({room:room,key:keys[room]||"",nick:nick,text:v})
+  }).then(function(r){if(!r.ok)$("status").textContent="الرسالة ما اتبعتتش، جرّب تاني";else load()}).catch(function(){});
+};
+
+function enter(){
+  var v=$("nick").value.trim().replace(/\s+/g," ");
+  if(v.length<2){$("nick").focus();return}
+  nick=v;store("nick",nick);
+  $("login").classList.add("hidden");$("app").classList.remove("hidden");
+  $("mename").textContent=nick;av($("meav"),nick);
+  fetch("/api/rooms").then(function(r){return r.json()}).then(function(l){rooms=l;openRoom("general")});
+}
+$("enter").onclick=enter;
+$("nick").onkeydown=function(e){if(e.key==="Enter")enter()};
+$("out").onclick=function(){
+  clearTimeout(timer);gen++;
+  $("app").classList.add("hidden");$("login").classList.remove("hidden")};
+$("menu").onclick=function(){$("side").classList.toggle("open")};
+var s=store("nick");if(s)$("nick").value=s;
+})();
+</script>
+</body>
+</html>
